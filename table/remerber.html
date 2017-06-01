@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        padding:0;
+        margin:0;
+        list-style: none;
+    }
+    html,body{
+        width:100%;
+        height:100%;
+        background: #008fdd;
+        overflow: hidden;
+    }
+    header{
+        width:1200px;
+        height:50px;
+        background:#008f88;
+        margin:0 auto;
+    }
+    header>img{
+        width:50px;
+        height:50px;
+    }
+    header>input{
+        padding:10px;
+        float: right;
+        border-radius: 4px;
+        margin:5px;
+        border:none;
+        outline:none;
+        font-size:14px;
+    }
+    .todoList,.doneList{
+        margin:30px auto;
+        position: relative;
+    }
+    h3{
+        font-size: 20px;
+        color:#fff;
+        text-align: center;
+        line-height: 20px;
+        margin:2px;
+    }
+    .todoList{
+        width: 1000px;
+        height:auto;
+        background: #1eddd9;
+    }
+    .doneList{
+        width: 1000px;
+        height:auto;
+        background: #13bbf4;
+    }
+    li{
+        font-size: 16px;
+        border:1px solid #f9ff6e;
+        color:#fff;
+        padding:20px;
+    }
+    .doneList>li{
+        color:#000;
+    }
+    button{
+        width: 50px;
+        height:50px;
+        float: right;
+        border:none;
+        margin:-40px 50px;
+        background:#1ed4d0;
+        color:#fff;
+        font-size: 20px;
+    }
+    p{
+        width: 500px;
+        margin-left: 80px;
+        margin-top: -5px;
+    }
+</style>
+<script src="js/function.js"></script>
+<body>
+    <header>
+        <img src="img/1.png" alt="">
+        <input type="text" placeholder="添加事件" id="input">
+    </header>
+    <section>
+            <h3>未完成的事项
+                <span id="todoCount"></span>
+            </h3>
+        <ul class="todoList">
+
+        </ul>
+        <h3>已完成的事项
+            <span id="doneCount"></span>
+        </h3>
+        <ul class="doneList">
+
+        </ul>
+    </section>
+</body>
+</html>
+<script>
+    window.onload=function() {
+        let todo = document.querySelector('.todoList');
+        let done = document.querySelector('.doneList');
+        let doneCount = document.querySelector('#doneCount');
+        let todoCount = document.querySelector('#todoCount');
+        let input=document.querySelector('#input');
+        load();
+        function load() {
+            let data = localStorage.things;
+            let todoString = '', doneString = '', todoNum = 0, doneNum = 0;
+            if (!data) {
+                init();
+            }
+            data = JSON.parse(localStorage.things);   //将字符串转化为数组
+            //console.log(data);
+            data.forEach(function(value,index){      //遍历数组内容
+                if (value.done) {                     //对象.属性
+                    //doneList
+                    doneNum++;                          //个数
+                    doneString += `
+                    <li id="${index}">
+                        <input type="checkbox">
+                        <p contenteditable="true">${value.title}</p>
+                        <button> × </button>
+                    </li>
+                    `;
+                } else {
+                    //todoList
+                    todoNum++;
+                    todoString += `
+                    <li id="${index}">
+                        <input type="checkbox">
+                        <p contenteditable="true">${value.title}</p>
+                        <button> × </button>
+                    </li>
+                   `;
+                }
+            })
+            done.innerHTML=doneString;
+            todo.innerHTML=todoString;
+            doneCount.innerText=doneNum;
+            todoCount.innerText=todoNum;
+        }
+        function init(){
+            let things=[
+                {title:'作业',done:false},
+                {title:'作业',done:false},
+                {title:'作业',done:true},
+                {title:'作业',done:true}
+            ];
+            let data=JSON.stringify(things);            //数组转化为字符串
+            localStorage.things=data;   //存储在本地服务器中
+
+        }
+        input.onkeydown=function(e){
+            if(e.keyCode==13) {
+                add({title: this.value.trim(), done: false});
+                this.value = '';
+            }
+        }
+        todo.onclick=function(e){
+            let obj=e.target;
+            if(obj.nodeName=='INPUT'){
+                let id=obj.parentNode.id;
+                finish(id);
+            }else if(obj.nodeName=='BUTTON') {
+                let id=obj.parentNode.id;
+                del(id);
+            }else if(obj.nodeName=='P'){
+                let newp=obj.innerText;
+                obj.onblur = function () {
+                    let value=obj.innerText.trim();
+                    if(value.length==0){
+                        value=newp;
+                    }
+                    let id=obj.parentNode.id;
+                    update(id,value);
+                }
+            }
+        }
+        done.onclick=function(e){
+            let obj=e.target;
+            if(obj.nodeName=='INPUT'){
+                let flag=window.confirm('改变为未完成事项吗？');
+                if(flag){
+                    let id=obj.parentNode.id;
+                    unfinished(id);
+                }else{
+                    let id=obj.parentNode.id;
+                    finish(id);
+                }
+            }else if(obj.nodeName=='BUTTON') {
+                let id=obj.parentNode.id;
+                del(id);
+            }else if(obj.nodeName=='P'){
+                let newp=obj.innerText;
+                obj.onblur = function () {
+                    let value=obj.innerText.trim();
+                    if(value.length==0){
+                        value=newp;
+                    }
+                    let id=obj.parentNode.id;
+                    update(id,value);
+                }
+            }
+        }
+          function update(id,value){
+            let data=getData();
+            data[id].title=value;
+            saveData(data);
+            load();
+          }  
+        function finish(id){
+            let data=getData();
+            data[id].done=true;
+            saveData(data);
+            load();
+        }
+        function unfinished(id){
+            let data=getData();
+            data[id].done=false;
+            saveData(data);
+            load();
+        }
+        function getData(){
+            let data=localStorage.things;
+            console.log(data);
+            return JSON.parse(data);
+        }
+        function saveData(data){
+            localStorage.things=JSON.stringify(data);
+
+        }
+        function add(obj){
+            //获取
+            let data=getData();
+            //添加
+            data.push(obj);
+            saveData(data);
+            load();
+        }
+        function del(id){
+            let data=getData();
+            data.splice(id,1);
+            saveData(data);
+            load();
+        }
+    }
+
+</script>

@@ -1,0 +1,224 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JS实现歌词同步</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding: 0;
+		}
+		body{
+			font-size: 16px;
+			font-family: 'Microsoft yahei';
+			background:url(images/bg.jpg);
+		}
+		ul,li{
+			list-style: none;
+		}
+		.lrcbox{
+			width: 377px;
+			height: 280px;
+			border:1px solid pink;
+			border-radius:10px;
+			box-shadow: 0 0 40px pink;
+			margin:40px 0 0 40px;
+			overflow: hidden;
+			margin:50px auto 30px;
+		}
+		.lrcbox{
+			border-left:3px solid pink;
+			
+		}
+		.lrcbox ul li{
+			height: 24px;
+			padding:8px;
+			text-align: center;
+			color: orange;
+			transition:all .3s ease;
+		}
+		#lrc_list{
+			transition:all .3s ease;
+		}
+		.lrcbox ul li.hover{
+			color:pink;
+		}
+		#audio{
+			margin:0 auto;
+			border-radius:10px;
+			position: absolute;
+			left: 0;
+			right: 0;
+			margin:auto;
+		}
+		textarea{
+			display:none;
+		}
+		h3{
+			text-align: center;
+			margin-top:70px;
+			color: #fff;
+		}
+		h4{
+			color: #fff;
+			text-align: center;
+			margin-top:20px;
+		}
+	</style>
+</head>
+<body>
+	<h3>刚好遇见你</h3>
+	<h4>冯提莫</h4>
+	<div class="lrcbox">
+		<ul id="lrc_list"></ul>
+	</div>
+
+	<audio src="mp3/5.mp3" id="audio" loop controls='controls'></audio>
+	<textarea id="lrcnt">
+		[ar:李玉刚]
+		[al:]
+		[by:黎起铮]
+		[t_time:(03:20)]
+		[00:00.00]
+		[00:02.67]刚好遇见你
+		[00:03.65]作词：高进
+		[00:04.61]作曲：高进
+		[00:05.65]演唱：冯提莫
+		[00:06.66]编曲：关天天
+		[00:13.35]我们哭了
+		[00:16.12]我们笑着
+		[00:19.21]我们抬头望天空
+		[00:22.06]星星还亮着几颗
+		[00:25.29]我们唱着
+		[00:28.23]时间的歌
+		[00:31.45]才懂得相互拥抱
+		[00:34.47]到底是为了什么
+		[00:37.48]因为我刚好遇见你
+		[00:41.03]留下足迹才美丽
+		[00:44.03]风吹花落泪如雨
+		[00:47.16]因为不想分离
+		[00:50.32]因为刚好遇见你
+		[00:53.26]留下十年的期许
+		[00:56.25]如果再相遇
+		[00:59.68]我想我会记得你
+		[01:14.75]我们哭了
+		[01:17.53]我们笑着
+		[01:20.71]我们抬头望天空
+		[01:23.54]星星还亮着几颗
+		[01:26.56]我们唱着
+		[01:29.73]时间的歌
+		[01:33.04]才懂得相互拥抱
+		[01:35.83]到底是为了什么
+		[01:38.96]因为我刚好遇见你
+		[01:42.36]留下足迹才美丽
+		[01:45.44]风吹花落泪如雨
+		[01:48.53]因为不想分离
+		[01:51.65]因为刚好遇见你
+		[01:54.69]留下十年的期许
+		[01:57.72]如果再相遇
+		[02:01.05]我想我会记得你
+		[02:04.72]因为刚好遇见你
+		[02:07.36]留下足迹才美丽
+		[02:10.14]风吹花落泪如雨
+		[02:13.11]因为不想分离
+		[02:16.22]因为刚好遇见你
+		[02:19.27]留下十年的期许
+		[02:22.32]如果再相遇
+		[02:25.79]我想我会记得你
+		[02:31.50]因为我刚好遇见你
+		[02:34.74]留下足迹才美丽
+		[02:37.80]风吹花落泪如雨
+		[02:40.76]因为不想分离
+		[02:43.95]因为刚好遇见你
+		[02:46.97]留下十年的期许
+		[02:49.96]如果再相遇
+		[02:53.28]我想我会记得你
+		[03:11.92]
+		[03:12.81]歌词千寻 www.lrcgc.com
+		[03:13.61]歌词编辑：黎起铮
+		[03:14.40]QQ：20891372
+		[03:15.29]
+ 
+	</textarea>
+
+<script type="text/javascript">
+	
+function $(id){
+	return document.getElementById(id);
+}
+var audioDom = $('audio');
+window.onload = function(){
+	lrc.init($('lrcnt').value);
+	// 监听当前的播放时间
+	audioDom.ontimeupdate = function(){
+		var t = parseInt(this.currentTime);
+		lrc.jump(t);
+	}
+}
+
+
+var lrc = {
+	// 正则 判断清除两边的空格
+	regex_trim:/^\s+|\s+$/,
+	// 歌词解析
+	init:function(lrctxts){
+		// 把歌词分割成数组
+		var txts = lrctxts.split('\n');
+		var html = '';
+		// 遍历分割歌词和时间
+		var i=0;len=txts.length;
+		for(;i<len;i++){
+			// 去掉左右空格
+			var item = txts[i].replace(this.regex_trim,'');
+			// 歌词和时间分割
+			var ms = item.split(']');
+			// 时间的处理 
+			var mt = ms[0].replace('[','').split(':');
+			var m = parseInt(mt[0]*60+mt[1]*1);
+			var txt = ms[1];
+			html+=`<li id='t_${m}'>${txt}</li>`;
+		}
+		$('lrc_list').innerHTML+=html;
+	},
+	jump:function(duration){
+		var dom = $('t_'+duration);
+		var lrcbox = $('lrc_list');
+		if(dom){
+			var arr = this.siblings(dom);
+			// 遍历已经执行过的去掉的hover样式
+			for(let i=0;i<arr.length;i++){
+				arr[i].className = '';
+			}
+			dom.className = 'hover';
+			var index = this.indexof(dom)-3;
+			lrcbox.style.marginTop = (index<0?0:index)*-40+'px';
+		}
+	},
+	indexof:function(dom){
+		// 父级关系
+		var listDoms = dom.parentElement.children;
+		var index = 0;
+		for(let i=0;i<listDoms.length;i++){
+			if(listDoms[i]==dom){
+				index = i;
+				break;
+			}
+		}
+		return index;
+	},
+	siblings:function(dom){
+		var listDoms = dom.parentElement.children;
+		var arr = [];
+		for(let i=0;i<listDoms.length;i++){
+			if(listDoms[i]!=dom){
+				arr.push(listDoms[i]);
+			}
+		}
+		return arr;
+	}
+};
+
+
+</script>
+</body>
+</html>

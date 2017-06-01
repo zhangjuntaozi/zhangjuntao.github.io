@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>练习博客</title>
+</head>
+<style>
+    *{
+        padding:0;
+        margin:0;
+        list-style:none;
+    }
+    .content{
+        width:300px;
+        /*position: absolute;*/
+        margin:auto;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        background:#CEEBF9;
+        padding:25px;
+    }
+    .content>p{
+        color:#242424;
+        font-size:16px;
+    }
+    .edit{
+        width:300px;
+        padding:10px;
+        box-sizing: border-box;
+        margin:10px auto;
+
+    }
+    .edit>textarea{
+        width:300px;
+        height:150px;
+        resize: none;
+        background:#CEEBF9 ;
+        border:0;
+        font-size: 20px;
+        border:1px solid #12B7F5;
+    }
+    .edit>button{
+        width: 80px;
+        height:30px;
+        border-radius: 5px;
+        background: #12B7F5;
+        float: right;
+        color:#fff;
+        font-size: 16px;
+        border:0;
+    }
+
+    .text{
+        width:100%;
+        font-size: 12px;
+        color:#242424;
+    }
+    .text>span{
+        font-size: 18px;
+        color:#000;
+    }
+    .commit{
+        width:300px;
+        height:auto;
+        padding:10px;
+        box-sizing: border-box;
+        margin:10px auto;
+    }
+    .list{
+        width: 100%;
+        height:auto;
+        overflow: hidden;
+    }
+    .list>li{
+        width:100%;
+        height:auto;
+        border:1px solid #12B7F5;
+        font-size: 14px;
+        padding:12px;
+        color:#000;
+    }
+    .list>li>img{
+        width: 100%;
+        height:100%;
+    }
+    .clear{
+        clear:both;
+    }
+</style>
+<body>
+    <div class="content">
+        <p>好友动态</p>
+        <div class="edit">
+            <textarea name="" id="" cols="30" rows="10" maxlength="100"></textarea>
+            <button>发表</button>
+            <div class="text">
+                最多输入100个字,还剩余<span>100</span>个字
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="commit">
+            <ul class="list">
+                <li>
+                    <img src="img/1.jpg" alt="">
+                </li>
+                <li>这是5月9日</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+<script src="js/function.js"></script>
+<script>
+    let edit=$('.edit')[0];
+    let textarea=$('textarea')[0];
+    let button=$('button')[0];
+    let span=$('span')[0];
+    let list=$('.list')[0];
+    limit=100;
+    textarea.onkeyup=function(){
+        let len=textarea.value.length;
+        span.innerText=limit-len;
+    }
+    button.onclick=function(){
+        if(textarea.value.trim()==0){
+            return alert('请不要输入空格！');
+        }
+        if(textarea.value.length==100){
+            textarea.slice(0,100);
+        }
+        let ele=document.createElement('li');
+        list.appendChild(ele);
+        ele.innerText=textarea.value;
+    }
+</script>

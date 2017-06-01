@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>委托事件</title>
+</head>
+<style>
+    body{
+        width: 100%;
+        height:100%;
+        background: url("img/banner.jpg")no-repeat;
+        background-size:100%;
+    }
+    *{
+        padding:0;
+        margin:0;
+    }
+    .box{
+        width: 200px;
+        height:100px;
+        background: green;
+        text-align: center;
+        line-height: 50px;
+        color:#fff;
+    }
+    .lif,.score{
+        width: 100%;
+        height:50px;
+        border-bottom: 1px solid #fafafa;
+    }
+    .score{
+        border:0;
+    }
+    .life,.score{
+        padding-left: 15px;
+        box-sizing: border-box;
+        border-bottom-width: 0px;
+    }
+    .life{
+        display: inline-block;
+        width:100px;
+        height:20px;
+        background: #000;
+        position: relative;
+    }
+    .life1{
+        width: 100%;
+        height:20px;
+        display: inline-block;
+        background:red;
+        position: absolute;
+        left:0;
+        top:0;
+        margin:auto;
+    }
+
+</style>
+<body>
+    <div class="box">
+        <div class="lif">生命值
+            <span class="life"><span class="life1"></span></span>
+        </div>
+        <div class="scor">成绩
+            <span class="score">0</span>
+        </div>
+    </div>
+
+</body>
+</html>
+<script src="js/function.js"></script>
+<script>
+    /*
+    * 属性
+    *源性对象中定义方法
+    *
+    * */
+        function Gram(){
+            this.life=$('.life1')[0];
+            this.lifes=10;   //生命值
+            this.score=$('.score')[0];
+            this.scores=0;    //分数
+            this.success=10;
+            this.arr=[
+                ['A','img/a.jpg'],
+                ['D','img/d.jpg'],
+                ['F','img/f.jpg'],
+                ['J','img/j.jpg'],
+                ['L','img/l.jpg'],
+                ['M','img/m.jpg'],
+                ['O','img/o.jpg'],
+                ['V','img/v.jpg'],
+                ['R','img/r.png'],
+                ['S','img/s.png'],
+                ['T','img/t.png'],
+                ['U','img/u.png'],
+                ['Q','img/q.png'],
+                ['P','img/p.png'],
+
+            ];
+            this.arrLength=4;
+            this.currentArr=[];
+            this.speed=20;
+            this.pos=[];
+        }
+        Gram.prototype= {
+            star: function () {
+                this.creatElements();
+                this.drop();
+                this.key();
+            },
+            creatElements: function () {
+                for (let i = 0; i < this.arrLength; i++) {
+//                    console.log(this.arrLength);
+                    this.getChar();
+                }
+
+            },
+            checkRepeat:function(text){
+                return  this.currentArr.some(function(value){
+                    return value.innerText==text;    //判断turn 或 false
+                })
+            },
+            checkPos:function(lefts){
+                 return  this.pos.some(function(value){
+                     return value+50>lefts&&value<lefts+50;
+                 })
+            },
+            getChar: function () {
+                let self=this;
+                let num = Math.floor(Math.random() * this.arr.length); //数组下标 5个
+                while(this.checkRepeat(this.arr[num][0])){
+                     num=Math.floor(Math.random() * self.arr.length);
+                }
+//                console.log(this.arrLength);
+                let div = $('<div>');
+                let tops = Math.random() * 100;
+                let lefts = Math.random() * (window.innerWidth -400) + 200;
+                while(this.checkPos(lefts)){
+                    lefts = Math.random() * (window.innerWidth -400) + 200;
+                }
+                this.pos.push(lefts);
+//               console.log(div);
+                div.style.cssText = `
+                    width:50px;
+                    height:50px;
+                    background-image:url(${this.arr[num][1]});
+                    background-position:center;
+                    background-size:cover;
+                    position:absolute;
+                    left:${lefts}px;
+                    top:${tops}px;
+                    text-align:center;
+                    line-height:50px;
+                    font-size:0px;
+                    border:1px solid #fff;
+                `;
+                document.body.appendChild(div);
+                div.innerText = this.arr[num][0];
+                this.currentArr.push(div);
+            },
+            drop:function () {
+                let self=this;
+                self.t=setInterval(function(){
+                    for(let i=0;i<self.currentArr.length;i++){
+                        let tops=self.currentArr[i].offsetTop+self.speed;
+                        self.currentArr[i].style.top=tops+'px';
+                        if(tops>500){
+                            document.body.removeChild(self.currentArr[i]);
+                            self.currentArr.splice(i,1);
+                            self.lifes--;
+                            //self.life.innerText=self.lifes;
+                            self.life.style.width=100*(self.lifes/10)+'%';
+                            if(self.lifes<=-1){
+                                let flag=window.confirm('失败乃成功之母！是否重新战斗！！');
+                                if(flag){
+                                    self.restar();
+                                }else{
+                                    close();
+                                }
+                            }
+
+                        }
+                        if(self.currentArr.length<self.arrLength){
+                            self.getChar();
+                        }
+                    }
+
+                },500)
+            },
+            key:function(){
+                document.body.onkeydown=function(e){
+                    let code=String.fromCharCode(e.keyCode);
+                    //console.log(code)所输入 a , b... 之间转换 获得的65 66  ....
+                    for(let i=0;i<this.currentArr.length;i++){
+                        if(code==this.currentArr[i].innerText) {
+                            document.body.removeChild(this.currentArr[i]);
+                            this.currentArr.splice(i, 1);
+                            this.scores++;
+                           // console.log(this.scores);
+                            this.score.innerText=this.scores;
+                            if(this.scores>this.success){
+                                let flag=window.confirm('恭喜你！闯关成功！进入下一关');
+                                if(flag){
+                                    this.resuccess();
+                                }else{
+                                    close();
+                                }
+                            }
+
+                        }
+
+
+                        if(this.currentArr.length<this.arrLength){
+                            this.getChar();
+                        }
+                    }
+                }.bind(this);
+            },
+            restar:function(){
+                clearInterval(this.t);
+                for(let i=0;i<this.currentArr.length;i++){
+                    document.body.removeChild(this.currentArr[i]);
+                }
+                this.lifes=10;
+                this.scores=0;
+//                this.life.innerText=this.lifes;
+                this.life.style.width=100*(this.lifes/10)+'%';
+                this.score.innerText=this.scores;
+                this.currentArr=[];  //必须重新开始数组中现存一个元素
+                this.pos=[];
+                this.star();
+            },
+            resuccess:function(){
+                clearInterval(this.t);
+                for(let i=0;i<this.currentArr.length;i++){
+                    document.body.removeChild(this.currentArr[i]);
+                }
+                this.currentArr=[];
+                this.lifes=10;
+                this.scores=0;
+//                this.life.innerText=this.lifes;
+                this.life.style.width=100*(this.lifes/10)+'%';
+                this.score.innerText=this.scores;
+                this.success+=10;
+                this.pos=[]; 
+                this.star();
+            }
+        }
+    let gram=new Gram();
+    gram.star();
+</script>

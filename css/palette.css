@@ -1,0 +1,120 @@
+*{
+    padding:0;
+    margin:0;
+    list-style:none;
+    text-decoration: none;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow: hidden;
+}
+
+.palette{
+    width:100%;
+    height:100%;
+    background: #000;
+    position: absolute;
+    top:0;
+    left:0;
+}
+
+
+.palette>.tool{
+    width:130px;
+    height:100%;
+    /*border-right: 2px solid #fff;*/
+    box-sizing: border-box;
+    position: absolute;
+}
+
+.tool>label{
+    color:#fff;
+    border:1px solid #fff;
+    padding:10px;
+    margin:5px;
+    float: left;
+}
+
+.palette>.dwag{
+    position:relative;
+    margin-left: 130px;
+    background: #fff;
+    right:0;
+    height:100%;
+    top:0;
+}
+
+.dwag>.fun{
+    width: 100%;
+    background: #000;
+    height:80px;
+    font-size: 30px;
+    text-align: center;
+    color:#fff;
+    line-height:80px;
+}
+.dwag>.fun>.load{
+    padding: 5px;
+    font-size: 16px;
+    border:1px solid #fff;
+    margin-left:10px;
+}
+.dwag>.fun>.screen{
+    padding: 5px;
+    font-size: 16px;
+    border:1px solid #fff;
+    margin-left:10px;
+}
+.tool>.box{
+    font-size: 28px;
+    color:#fff;
+    text-align: center;
+    width: 100%;
+    height:50px;
+    line-height: 50px;
+}
+.icon-xiangpical{
+    border:1px solid #fff;
+    background: #000;
+}
+.screen{
+    position: relative;
+}
+.screen>.opcity{
+    width:800px;
+    height:600px;
+    position:absolute;
+    top:0;
+    left:0px;
+    /*background: #000;*/
+    border:2px solid #fff;
+    z-index: 1000;
+}
+.eraserBtn{
+    width: 48px;
+    height:48px;
+    border:1px solid #ccc;
+    position: absolute;
+    background: #fff;
+    display: none;
+    z-index: 100;
+    border-radius: 5px;
+}
+img{
+    width:300px;
+    position: absolute;
+    top:200px;
+    left:1010px;
+    border:1px solid #000;
+}
+
+.screen>canvas{
+    border:2px solid #3cffe9;
+}
+
+.clip{
+    border:1px solid #ccc;
+    position: absolute;
+}

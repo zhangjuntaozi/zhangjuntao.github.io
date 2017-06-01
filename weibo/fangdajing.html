@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>放大镜</title>
+    </head>
+    <script src='js/function.js'></script>
+    <style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		.sbox{
+			width:160px;
+			height: 110px;
+			border: 1px solid #dfdfdf;
+			position: relative;
+			margin: 20px;
+			float: left; 
+		}
+		.sbox>img{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.bbox{
+			width:160px;
+			height: 110px;
+			border: 1px solid #dfdfdf;
+			position: relative;
+			top: 0;
+			left: 180px;
+			margin: 20px; 
+			float: left;
+			overflow: hidden;
+		}
+		.bbox>img{
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		div{
+			
+		}
+    </style>
+    <body>
+    	<div class="sbox">
+    		<img src="img/ds1.png" alt="">
+    	</div>
+    	<div class="bbox">
+    		<img src="img/ds1.png" alt="">
+    	</div>
+    	<div >	</div>
+    </body>
+</html>
+<script>
+	$(function(){
+		let sbox=$('.sbox')[0];
+		let simg=$('img',sbox)[0];
+		let bbox=$('.bbox')[0];
+		let bimg=$('img',bbox)[0];
+		// console.log(bbox);
+		let sw=sbox.offsetWidth,sg=sbox.offsetHeight,bw=bimg.offsetWidth,bh=bimg.offsetHeight;
+		let bili=sw/bw;
+		console.log(bili);
+		sbox.onmousemove=function(e){
+			let ox=e.offsetX,oy=e.offsetY;		
+			console.log(ox);
+			//ox  
+			//sx
+			bimg.style.left=-ox*bili+'px';
+			// console.log(-ox*bili+'px')
+			bimg.style.top=-oy*bili+'px';
+		}
+	})
+</script>

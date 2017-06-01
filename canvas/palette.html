@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>画板</title>
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/palette.css">
+</head>
+<body>
+    <!--线，铅笔 ，矩形，多边形  ，多角形 ，圆 ，虚线 ，圆角矩形-->
+    <!--填充 ， 描边，填充样式 ，描边样式-->
+    <!--橡皮，文字 ，裁切-->
+    <!--撤销 ，保存 ，新建-->
+    <!--线宽，颜色，fill,stroke-->
+    <div class="palette">
+        <div class="tool">
+            <p class="box">工具箱</p>
+            <label for="" class="iconfont icon-xian"></label>
+            <label for="" class="iconfont icon-qianbi01"></label>
+            <label for="" class="iconfont icon-juxing"></label>
+            <label for="" class="iconfont icon-duobianxing"></label>
+            <label for="" class="iconfont icon-wujiaoxing"></label>
+            <label for="" class="iconfont icon-yuan"></label>
+            <label for="" class="iconfont icon-xuxian"></label>
+            <label for="" class="iconfont icon-rounded-corners-stroke1-s40-r06"></label>
+            <label for="" class="iconfont icon-tianchong">
+                <input type="color" value="" class="fcolor">
+            </label>
+            <label for="" class="iconfont icon-miaobian">
+                <input type="color" value="" class="fcolor1">
+            </label>
+            <label for="" class="iconfont icon-xiangpical"></label>
+            <label for="" class="icon-wenzi iconfont"></label>
+            <label for="" class="save">保存</label>
+            <label for="" class="new">新建</label>
+            <label for="" class="cancel">清空</label>
+            <label for="" class="cut">裁切</label>
+        </div>
+        <div class="dwag">
+            <div class="fun">
+                canvas画板
+                <label for="" class="load">下载</label>
+                <label for="" class="screen">全屏</label>
+<label for="" class="screen"><a href="../index.html" style="color:#fff">首页</label>
+            </div>
+            <div class="screen">
+                <canvas width="800" height="600"></canvas>
+                <div class="opcity">
+
+                </div>
+                <div class="eraserBtn"></div>
+                <div class="clip"></div>
+            </div>
+
+        </div>
+    </div>
+    <img src="" alt="保存图片自动撑开">
+</body>
+</html>
+
+<script src="js/palette.js"></script>
+
+<script src="js/can.js"></script>
+
+
+
+
+
